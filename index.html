@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<style>
+  html { color-scheme: light dark; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Term 1 Home</title>
+<meta name="description" content="Home base for DLSU Term 1 AY26-27 — six subjects, live deadline tracker, weekly study hours, and links to every study resource." />
+<style>
+  :root {
+    --paper:#f6f5f2; --panel:#fff; --panel-2:#efece5; --panel-3:#e7e3d8;
+    --ink:#23252b; --ink-soft:#595e68; --ink-faint:#8b8f98;
+    --rule:#e1ddd3; --rule-strong:#cfc9bb;
+    --accent:#1f6f6b; --accent-soft:#e0efec;
+    --flag:#a4531d; --flag-soft:#f3e5d8;
+    --crit:#a3352b; --crit-soft:#f5e0dd;
+    --ok:#2f6b3f; --ok-soft:#e2efe4;
+    --shadow:0 1px 2px rgba(35,37,43,.04), 0 8px 24px rgba(35,37,43,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#14151a; --panel:#1c1e24; --panel-2:#23262e; --panel-3:#2b2f38;
+      --ink:#e8e7e2; --ink-soft:#a3a5ac; --ink-faint:#767982;
+      --rule:#2c2f37; --rule-strong:#3a3e48;
+      --accent:#54b7af; --accent-soft:#12312f;
+      --flag:#dd9159; --flag-soft:#35251a;
+      --crit:#e0776b; --crit-soft:#3a201d;
+      --ok:#6fbb81; --ok-soft:#17301d;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#14151a; --panel:#1c1e24; --panel-2:#23262e; --panel-3:#2b2f38;
+    --ink:#e8e7e2; --ink-soft:#a3a5ac; --ink-faint:#767982;
+    --rule:#2c2f37; --rule-strong:#3a3e48;
+    --accent:#54b7af; --accent-soft:#12312f;
+    --flag:#dd9159; --flag-soft:#35251a;
+    --crit:#e0776b; --crit-soft:#3a201d;
+    --ok:#6fbb81; --ok-soft:#17301d;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Public Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size:15px; line-height:1.55;
+  }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 20px 100px; }
+  h1,h2,h3 { font-family:"Fraunces", Georgia, serif; font-weight:600; text-wrap:balance; line-height:1.15; }
+  h1 { font-size:clamp(1.9rem,4.5vw,2.7rem); margin:0 0 .25em; letter-spacing:-.01em; }
+  h2 { font-size:1.35rem; margin:0; }
+  .mono { font-family:"IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  a { color:var(--accent); text-underline-offset:2px; }
+
+  header.top { padding:44px 0 22px; border-bottom:1px solid var(--rule); }
+  .kicker { font-family:"IBM Plex Mono",monospace; font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:0 0 1em; }
+  .termdates { display:flex; flex-wrap:wrap; gap:7px 9px; margin-top:16px; font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--ink-soft); }
+  .termdates span { background:var(--panel-2); border:1px solid var(--rule); border-radius:999px; padding:4px 11px; }
+
+  /* stat tiles */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:22px 0 8px; }
+  .stat { background:var(--panel); border:1px solid var(--rule); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); }
+  .stat .lab { font-family:"IBM Plex Mono",monospace; font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+  .stat .val { font-family:"Fraunces",serif; font-size:1.7rem; font-weight:600; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .stat .sub { font-size:.78rem; color:var(--ink-soft); margin-top:1px; }
+  .stat.warn .val { color:var(--flag); }
+  @media (max-width:720px){ .stats{ grid-template-columns:repeat(2,1fr);} }
+
+  section { padding-top:34px; }
+  .sec-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:4px; }
+  .sec-head .hint { font-size:.8rem; color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; }
+
+  /* deadline list */
+  .dl { display:flex; flex-direction:column; gap:1px; border:1px solid var(--rule); border-radius:12px; overflow:hidden; margin-top:14px; box-shadow:var(--shadow); }
+  .dl-row { display:grid; grid-template-columns:26px 76px 1fr auto; gap:12px; align-items:center; background:var(--panel); padding:11px 15px; border-left:3px solid transparent; }
+  .dl-row.past   { border-left-color:var(--rule-strong); opacity:.5; }
+  .dl-row.done   { border-left-color:var(--ok); opacity:.55; }
+  .dl-row.today  { border-left-color:var(--crit); background:var(--crit-soft); }
+  .dl-row.soon   { border-left-color:var(--flag); background:var(--flag-soft); }
+  .dl-row.week   { border-left-color:var(--accent); }
+  .dl-row.later  { border-left-color:transparent; }
+  .dl-row .code { font-family:"IBM Plex Mono",monospace; font-size:.72rem; font-weight:600; color:var(--accent); letter-spacing:.03em; }
+  .dl-row.done .title, .dl-row.past .title { text-decoration:line-through; }
+  .dl-row .title { font-size:.9rem; }
+  .dl-row .when { font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--ink-soft); white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums; }
+  .dl-row .cd { font-weight:700; }
+  .dl-row.today .cd { color:var(--crit); }
+  .dl-row.soon .cd { color:var(--flag); }
+  .dl-row input[type=checkbox] { width:16px; height:16px; accent-color:var(--accent); cursor:pointer; }
+  .filters { display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  .filters button {
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.03em;
+    border:1px solid var(--rule-strong); background:var(--panel); color:var(--ink-soft);
+    border-radius:7px; padding:5px 10px; cursor:pointer; transition:.12s;
+  }
+  .filters button[aria-pressed="true"] { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* subject cards */
+  .subs { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+  @media (max-width:900px){ .subs{ grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:600px){ .subs{ grid-template-columns:1fr;} }
+  .sub { background:var(--panel); border:1px solid var(--rule); border-radius:12px; padding:16px 17px 15px; box-shadow:var(--shadow); display:flex; flex-direction:column; }
+  .sub .code { font-family:"IBM Plex Mono",monospace; font-size:.76rem; font-weight:600; letter-spacing:.05em; color:var(--accent); }
+  .sub h3 { font-size:1rem; margin:3px 0 2px; font-family:"Public Sans",sans-serif; font-weight:700; }
+  .sub .meta { font-size:.78rem; color:var(--ink-soft); }
+  .pill { display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; padding:3px 7px; border-radius:5px; margin-top:9px; align-self:flex-start; }
+  .pill.active { background:var(--ok-soft); color:var(--ok); }
+  .pill.spin   { background:var(--flag-soft); color:var(--flag); }
+  .pill.empty  { background:var(--panel-2); color:var(--ink-soft); }
+  .sub .next { margin-top:10px; padding-top:10px; border-top:1px solid var(--rule); font-size:.8rem; }
+  .sub .next .k { font-family:"IBM Plex Mono",monospace; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); display:block; }
+  .sub .hrs { font-family:"IBM Plex Mono",monospace; font-size:.76rem; color:var(--ink-soft); margin-top:6px; }
+  .sub .links { display:flex; gap:8px; margin-top:11px; flex-wrap:wrap; }
+  .sub .links a { font-family:"IBM Plex Mono",monospace; font-size:.72rem; text-decoration:none; border:1px solid var(--rule-strong); border-radius:6px; padding:4px 8px; color:var(--ink-soft); transition:.12s; }
+  .sub .links a:hover { color:var(--accent); border-color:var(--accent); }
+
+  /* tables */
+  .tbl { overflow-x:auto; margin:14px 0; border:1px solid var(--rule); border-radius:12px; box-shadow:var(--shadow); }
+  table { border-collapse:collapse; width:100%; font-size:.82rem; background:var(--panel); }
+  th,td { text-align:left; padding:8px 11px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th { font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+  td.num { font-family:"IBM Plex Mono",monospace; text-align:right; font-variant-numeric:tabular-nums; }
+  tr:last-child td { border-bottom:none; }
+  tr.now td { background:var(--accent-soft); }
+  tr.now td:first-child { font-weight:700; }
+
+  .callout { border-left:3px solid var(--flag); background:var(--flag-soft); padding:12px 15px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.86rem; }
+  .callout .h { display:block; font-weight:700; margin-bottom:3px; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; color:var(--flag); }
+
+  .res { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:14px; }
+  @media (max-width:600px){ .res{ grid-template-columns:1fr;} }
+  .res a, .res div.rescard {
+    display:block; background:var(--panel); border:1px solid var(--rule); border-radius:12px;
+    padding:14px 16px; text-decoration:none; color:var(--ink); box-shadow:var(--shadow); transition:.12s;
+  }
+  .res a:hover { border-color:var(--accent); }
+  .res .rt { font-weight:700; font-size:.9rem; }
+  .res .rd { font-size:.78rem; color:var(--ink-soft); margin-top:2px; }
+  .res .rp { font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--ink-faint); margin-top:6px; word-break:break-all; }
+
+  footer { margin-top:44px; padding-top:20px; border-top:1px solid var(--rule); font-size:.82rem; color:var(--ink-soft); }
+  .reset { font-family:"IBM Plex Mono",monospace; font-size:.7rem; background:none; border:1px solid var(--rule-strong); color:var(--ink-faint); border-radius:6px; padding:4px 9px; cursor:pointer; }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important;} }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;700&display=swap" />
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="kicker">DLSU · ID 125 · AY 2026–27 · Term 1</p>
+    <h1>Term 1 Home</h1>
+    <p style="color:var(--ink-soft);max-width:60ch;margin:.2em 0 0">Six subjects, one place. Deadlines update against today's date — tick them off as you go (saved in this browser). Everything links out to Canvas, your NotebookLM notebooks, and the study guides.</p>
+    <div class="termdates">
+      <span>Starts Mon Sep 7</span>
+      <span>Independent Learning Oct 29 – Nov 4</span>
+      <span>Grade Consultation Dec 15</span>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <section id="next">
+    <div class="sec-head"><h2>Deadlines</h2><span class="hint" id="dlcount"></span></div>
+    <div class="filters" id="filters">
+      <button data-f="upcoming" aria-pressed="true">Upcoming</button>
+      <button data-f="all" aria-pressed="false">All</button>
+      <button data-f="ACYFDR1" aria-pressed="false">ACYFDR1</button>
+      <button data-f="COBSTRM" aria-pressed="false">COBSTRM</button>
+      <button data-f="COBEDEV" aria-pressed="false">COBEDEV</button>
+    </div>
+    <div class="dl" id="dl"></div>
+    <p style="font-size:.78rem;color:var(--ink-faint);margin-top:8px">All 24 are also on your Google Calendar with 1-day / 4-hour / 2-hour reminders. Times are Manila. COBMECO, DSILYTC and ACTCOMM have no dated tasks yet.</p>
+  </section>
+
+  <section id="subjects">
+    <div class="sec-head"><h2>Subjects</h2><span class="hint" id="wknote"></span></div>
+    <div class="subs" id="subs"></div>
+  </section>
+
+  <section id="hours">
+    <div class="sec-head"><h2>Weekly study hours</h2><span class="hint">outside class · current week highlighted</span></div>
+    <div class="tbl">
+      <table id="hrstbl">
+        <thead><tr><th>Wk</th><th>Dates</th><th class="num">ACY</th><th class="num">STRM</th><th class="num">LYTC</th><th class="num">MECO</th><th class="num">EDEV</th><th class="num">COMM</th><th class="num">Total</th><th>Driver</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p style="font-size:.8rem;color:var(--ink-soft)">Give the first ~2 hrs of each study day to <strong>ACYFDR1</strong>. Use <strong>COBEDEV</strong> as the low-friction task for when you're tired. The three empty subjects' hours are estimates until they post graded work.</p>
+  </section>
+
+  <section id="crunch">
+    <div class="sec-head"><h2>Collision calendar</h2><span class="hint">plan the day before, not the day of</span></div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Date</th><th>What collides</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Sep 25 Fri</td><td>COBSTRM Ch 4 (6 PM) + COBEDEV Quiz 1</td></tr>
+          <tr><td class="mono">Sep 28 Mon</td><td>ACYFDR1 Portfolio 1 — first big submission</td></tr>
+          <tr><td class="mono">Oct 16 Fri</td><td>COBSTRM Ch 7 + COBEDEV Quiz 2</td></tr>
+          <tr><td class="mono">Oct 19 Mon</td><td>ACYFDR1 Portfolio 4 — closes the portfolio run</td></tr>
+          <tr><td class="mono">Oct 23 Fri</td><td>COBSTRM Ch 8 + COBEDEV Reflection 5</td></tr>
+          <tr><td class="mono">Oct 29–Nov 4</td><td>Independent Learning Period — draft the COBSTRM final paper</td></tr>
+          <tr><td class="mono">Nov 6 Fri</td><td>COBSTRM Ch 9 + COBEDEV Quiz 3</td></tr>
+          <tr><td class="mono">Nov 13–20</td><td>COBSTRM Ch 10 + Final Strategy Paper + CapLab file + COBEDEV Final Paper (Nov 20). <strong>The peak.</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <span class="h">COBSTRM — still to pin down</span>
+      Your <strong>group number</strong> sets when your case-study crunch lands (Group 1 ≈ week 4, Group 8 ≈ week 11) and your final-paper presentation week. Not on the calendar yet: CapLab Vision-Mission (~wk 4), 8 Tutorials + Quiz 1 (wk 7), CapLab Report + .SAV (wk 12), the in-person Long Quiz + Final Strategy Paper (wk 13, hard cutoff).
+    </div>
+  </section>
+
+  <section id="resources">
+    <div class="sec-head"><h2>Resources</h2></div>
+    <div class="res">
+      <a href="https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60">
+        <div class="rt">📓 Term 1 Study Command</div>
+        <div class="rd">Per-subject study plans, how to review each, weekly hour budget, NotebookLM workflow + prompt library</div>
+      </a>
+      <a href="https://claude.ai/code/artifact/d651fc2a-2589-4611-8c51-5cca8746f5ed">
+        <div class="rt">📈 COBMECO Study Guide</div>
+        <div class="rd">All six parts, formula sheet, diagrams, exam-trap boxes, essay technique + question bank (exams are essay format)</div>
+      </a>
+      <a href="https://docs.google.com/spreadsheets/d/1KecAwmQVFyZiZtZSx7A8OFQBcfKwmPnhvKlufZBgQY8/edit">
+        <div class="rt">📄 Deadlines spreadsheet</div>
+        <div class="rd">The 24 dated tasks as a Google Sheet (subject, task, day, date, time, points, Canvas link)</div>
+      </a>
+      <a href="https://dlsu.instructure.com/">
+        <div class="rt">🎓 Canvas / AnimoSpace</div>
+        <div class="rd">Course shells — re-check weekly for new DSILYTC, COBMECO and ACTCOMM work</div>
+      </a>
+      <div class="rescard">
+        <div class="rt">🗂️ Local source archive</div>
+        <div class="rd">Every Canvas file downloaded + decks converted to PDF, organised by subject</div>
+        <div class="rp">~/Documents/dlsu-notebooklm/</div>
+      </div>
+      <div class="rescard">
+        <div class="rt">📌 Still pending</div>
+        <div class="rd">DSILYTC — graded work not posted · COBMECO — Long Exam + PPT dates · ACTCOMM — nothing posted at all · COBSTRM — group number &amp; the undated milestones above</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built from Canvas as of Sep 7, 2026. Tick-offs are stored only in this browser. <button class="reset" id="reset">reset ticks</button></p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var TZ = "Asia/Manila";
+  var TERM_START = new Date("2026-09-07T00:00:00+08:00");
+
+  var SUBJECTS = [
+    { code:"ACYFDR1", name:"Financial Accounting & Reporting 1", prof:"Sec K35", sched:"4 portfolios", status:"active",
+      canvas:"https://dlsu.instructure.com/courses/265338",
+      notebook:"https://notebooklm.google.com/notebook/d85f4353-e6cb-461d-89be-253f60c380db",
+      guide:"https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60#acyfdr1", key:"ACY" },
+    { code:"COBSTRM", name:"Strategic Management", prof:"Ms. Charisse Ang · TTh 6:00 PM · LS215", sched:"Ch 1–10 + group papers", status:"active",
+      canvas:"https://dlsu.instructure.com/courses/267284",
+      notebook:"https://notebooklm.google.com/notebook/3596b065-eac0-48b5-bf8f-8fc3d3d22aee",
+      guide:"https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60#cobstrm", key:"STRM" },
+    { code:"COBEDEV", name:"Contemporary National Economic Development", prof:"Prof. Lim · Sec C01", sched:"5 reflections · 3 quizzes · final paper", status:"active",
+      canvas:"https://dlsu.instructure.com/courses/265625",
+      notebook:"https://notebooklm.google.com/notebook/f072de83-7bcc-4834-97d9-399e6b21520f",
+      guide:"https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60#cobedev", key:"EDEV" },
+    { code:"DSILYTC", name:"Introduction to Analytics", prof:"Prof. Sapinoso · Tue G210 / Fri online · 2:30 PM", sched:"Module 1 posted; no deadlines yet", status:"spin",
+      canvas:"https://dlsu.instructure.com/courses/268618",
+      notebook:"https://notebooklm.google.com/notebook/b16ace71-4e2b-49c0-9521-af84827a98f3",
+      guide:"https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60#dsilytc", key:"LYTC" },
+    { code:"COBMECO", name:"Managerial Economics", prof:"Dr. Raymundo · 0915 TF · L-334", sched:"2 essay exams + group PPT", status:"spin",
+      canvas:"https://dlsu.instructure.com/courses/270994",
+      notebook:"https://notebooklm.google.com/notebook/7bd52179-ed27-49c1-a4b6-46e5128547ba",
+      guide:"https://claude.ai/code/artifact/d651fc2a-2589-4611-8c51-5cca8746f5ed", key:"MECO" },
+    { code:"ACTCOMM", name:"Business Communication for Accountancy", prof:"Sec C02A", sched:"Nothing posted in Canvas", status:"empty",
+      canvas:"https://dlsu.instructure.com/courses/268622",
+      notebook:"https://notebooklm.google.com/notebook/52b625df-a41c-4506-963d-40174c3487fe",
+      guide:"https://claude.ai/code/artifact/e1cb6844-4e33-40ea-ad2a-ab1610402a60#actcomm", key:"COMM" }
+  ];
+
+  var D = [
+    ["COBEDEV","4 Things About Yourself","2026-09-08T23:59:00+08:00"],
+    ["COBEDEV",'Reflection 1 — "If the World Were 100 People"',"2026-09-11T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 1","2026-09-15T18:00:00+08:00"],
+    ["COBSTRM","Study Chapter 2","2026-09-18T18:00:00+08:00"],
+    ["COBEDEV",'Reflection 2 — "Could You Survive in Wealth?"',"2026-09-18T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 3","2026-09-22T18:00:00+08:00"],
+    ["COBSTRM","Study Chapter 4","2026-09-25T18:00:00+08:00"],
+    ["COBEDEV","Quiz 1","2026-09-25T23:59:00+08:00"],
+    ["ACYFDR1","Assignment Portfolio 1","2026-09-28T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 5","2026-09-29T18:00:00+08:00"],
+    ["COBEDEV",'Reflection 3 — "Hungry Planet"',"2026-10-02T23:59:00+08:00"],
+    ["ACYFDR1","Accounting Portfolio 2","2026-10-05T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 6","2026-10-06T18:00:00+08:00"],
+    ["COBEDEV",'Reflection 4 — "Baby-o-matic"',"2026-10-09T23:59:00+08:00"],
+    ["ACYFDR1","Assignment Portfolio 3","2026-10-12T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 7","2026-10-16T18:00:00+08:00"],
+    ["COBEDEV","Quiz 2","2026-10-16T23:59:00+08:00"],
+    ["ACYFDR1","Assignment Portfolio 4","2026-10-19T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 8","2026-10-23T18:00:00+08:00"],
+    ["COBEDEV",'Reflection 5 — "China’s Growing Appetite"',"2026-10-23T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 9","2026-11-06T18:00:00+08:00"],
+    ["COBEDEV","Quiz 3","2026-11-06T23:59:00+08:00"],
+    ["COBSTRM","Study Chapter 10","2026-11-13T18:00:00+08:00"],
+    ["COBEDEV","Final Paper","2026-11-20T23:59:00+08:00"]
+  ].map(function(r,i){ return { id:"d"+i, code:r[0], title:r[1], due:new Date(r[2]) }; });
+
+  // week matrix: [ACY, STRM, LYTC, MECO, EDEV, COMM, total, driver]
+  var WK = [
+    [4,4,2,2,3,0,15,"Ease in. Buy COBSTRM licences. COBEDEV intro + Reflection 1."],
+    [5,6,3,3,3,1,21,"COBSTRM Ch 1 & 2. COBEDEV Reflection 2."],
+    [7,6,3,3,4,1.5,24,"COBSTRM Ch 3 & 4. COBEDEV Quiz 1. Portfolio 1 build."],
+    [7,5,4,3,3,1.5,23,"Portfolio 1 due. COBSTRM Ch 5. LYTC graded work likely starts."],
+    [7,5,4,4,3,1.5,24,"Portfolio 2 due. COBSTRM Ch 6. MECO Long Exam approaching."],
+    [7,5,4,6,4,2,28,"Portfolio 3 due. COBSTRM Ch 7. COBEDEV Quiz 2. MECO Long Exam (~here)."],
+    [6,8,4,4,3,2,27,"Portfolio 4 due. COBSTRM Ch 8 + CapLab tutorials + case study starts."],
+    [4,12,3,3,2,2,26,"ILP. COBSTRM Case Study paper + presentation; draft the final paper."],
+    [5,8,4,4,4,2,27,"COBSTRM Ch 9. COBEDEV Quiz 3. Final Strategy Paper building."],
+    [5,12,4,4,3,2,30,"Peak. COBSTRM Ch 10 + Final Strategy Paper + CapLab file + presentation."],
+    [5,6,4,4,6,3,28,"COBEDEV Final Paper due Nov 20. COBSTRM final presentation + peer evals."],
+    [6,3,4,6,2,3,24,"Finals review begins. MECO Final Exam prep."],
+    [8,2,5,8,2,4,29,"Final exams. GCD Dec 15."]
+  ];
+  var WKDATES = ["Sep 7–13","Sep 14–20","Sep 21–27","Sep 28–Oct 4","Oct 5–11","Oct 12–18","Oct 19–25","Oct 26–Nov 1","Nov 2–8","Nov 9–15","Nov 16–22","Nov 23–29","Nov 30–Dec 6"];
+
+  var KEY = "dlsu-t1-done";
+  function loadDone(){ try{ return JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ return []; } }
+  function saveDone(a){ try{ localStorage.setItem(KEY, JSON.stringify(a)); }catch(e){} }
+  var done = loadDone();
+
+  var now = new Date();
+  var DAY = 86400000;
+  function currentWeek(){
+    var w = Math.floor((now - TERM_START)/(7*DAY)) + 1;
+    return w < 1 ? 0 : (w > 13 ? 14 : w);
+  }
+  function fmtDue(d){
+    return d.toLocaleString("en-US",{ timeZone:TZ, weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit" });
+  }
+  function statusOf(d, isDone){
+    if(isDone) return "done";
+    var diff = d - now;
+    if(diff < -DAY) return "past";
+    if(diff < 0) return "today";
+    if(diff < 2*DAY) return "soon";
+    if(diff < 7*DAY) return "week";
+    return "later";
+  }
+  function countdown(d){
+    var diff = d - now;
+    if(diff < 0){ var od = Math.ceil(-diff/DAY); return od <= 1 ? "overdue" : od+"d ago"; }
+    var days = Math.floor(diff/DAY);
+    if(days === 0){ var h = Math.round(diff/3600000); return h <= 1 ? "<1h" : h+"h"; }
+    if(days === 1) return "tomorrow";
+    return "in "+days+"d";
+  }
+
+  var filter = "upcoming";
+
+  function render(){
+    now = new Date();
+    // stats
+    var cw = currentWeek();
+    var pending = D.filter(function(x){ return done.indexOf(x.id) < 0; });
+    var next = pending.filter(function(x){ return x.due >= now; }).sort(function(a,b){ return a.due - b.due; })[0];
+    var weekCount = pending.filter(function(x){ var diff = x.due - now; return diff >= -DAY && diff < 7*DAY; }).length;
+    var hrs = (cw >= 1 && cw <= 13) ? WK[cw-1][6] : "—";
+    var doneCount = D.filter(function(x){ return done.indexOf(x.id) >= 0 || x.due < now - DAY; }).length;
+
+    document.getElementById("stats").innerHTML = [
+      tile("Term week", cw >= 1 && cw <= 13 ? cw + " of 13" : (cw === 0 ? "not started" : "finals"), cw>=1&&cw<=13 ? WKDATES[cw-1] : ""),
+      tile("Study hours this week", hrs, cw>=1&&cw<=13 ? "target, outside class" : ""),
+      tile("Due within 7 days", weekCount, weekCount ? "stay ahead" : "clear", weekCount >= 4),
+      tile("Next deadline", next ? countdown(next.due) : "none", next ? next.code + " · " + next.title.replace(/ —.*/,"") : "all done")
+    ].join("");
+
+    document.getElementById("dlcount").textContent = doneCount + " / " + D.length + " passed or ticked";
+    document.getElementById("wknote").textContent = cw>=1&&cw<=13 ? ("week " + cw + " — " + WKDATES[cw-1]) : "";
+
+    // deadline list
+    var list = D.slice().sort(function(a,b){ return a.due - b.due; });
+    if(filter === "upcoming") list = list.filter(function(x){ return done.indexOf(x.id) < 0 && x.due >= now - DAY; }).slice(0, 12);
+    else if(filter !== "all") list = list.filter(function(x){ return x.code === filter; });
+
+    document.getElementById("dl").innerHTML = list.map(function(x){
+      var isDone = done.indexOf(x.id) >= 0;
+      var st = statusOf(x.due, isDone);
+      return '<label class="dl-row '+st+'">'
+        + '<input type="checkbox" data-id="'+x.id+'" '+(isDone?"checked":"")+'>'
+        + '<span class="code">'+x.code+'</span>'
+        + '<span class="title">'+x.title+'</span>'
+        + '<span class="when"><span class="cd">'+(isDone?"done":countdown(x.due))+'</span> · '+fmtDue(x.due)+'</span>'
+        + '</label>';
+    }).join("") || '<div class="dl-row later"><span></span><span></span><span class="title" style="color:var(--ink-faint)">Nothing here.</span><span></span></div>';
+
+    // subjects
+    document.getElementById("subs").innerHTML = SUBJECTS.map(function(s){
+      var sn = D.filter(function(x){ return x.code === s.code && done.indexOf(x.id) < 0 && x.due >= now; }).sort(function(a,b){ return a.due - b.due; })[0];
+      var wkh = (cw >= 1 && cw <= 13) ? colFor(s.key, cw) : null;
+      var pill = s.status === "active" ? '<span class="pill active">Active</span>' : (s.status === "spin" ? '<span class="pill spin">Spinning up</span>' : '<span class="pill empty">Nothing posted</span>');
+      return '<div class="sub">'
+        + '<span class="code">'+s.code+'</span>'
+        + '<h3>'+s.name+'</h3>'
+        + '<span class="meta">'+s.prof+' · '+s.sched+'</span>'
+        + pill
+        + '<div class="next"><span class="k">Next deadline</span>'+(sn ? (sn.title+' — '+fmtDue(sn.due)+' <strong>('+countdown(sn.due)+')</strong>') : '<span style="color:var(--ink-faint)">none scheduled</span>')+'</div>'
+        + (wkh !== null ? '<div class="hrs">this week ≈ '+wkh+' hr</div>' : '')
+        + '<div class="links"><a href="'+s.canvas+'">Canvas</a><a href="'+s.notebook+'">Notebook</a><a href="'+s.guide+'">Guide</a></div>'
+        + '</div>';
+    }).join("");
+
+    // hours table
+    var tb = document.querySelector("#hrstbl tbody");
+    tb.innerHTML = WK.map(function(r, i){
+      return '<tr'+(i+1 === cw ? ' class="now"' : '')+'>'
+        + '<td class="mono">'+(i+1)+'</td><td class="mono">'+WKDATES[i]+'</td>'
+        + r.slice(0,7).map(function(v){ return '<td class="num">'+v+'</td>'; }).join("")
+        + '<td>'+r[7]+'</td></tr>';
+    }).join("");
+  }
+
+  function colFor(key, wk){
+    var idx = { ACY:0, STRM:1, LYTC:2, MECO:3, EDEV:4, COMM:5 }[key];
+    return WK[wk-1][idx];
+  }
+  function tile(lab, val, sub, warn){
+    return '<div class="stat'+(warn?" warn":"")+'"><div class="lab">'+lab+'</div><div class="val">'+val+'</div><div class="sub">'+(sub||"")+'</div></div>';
+  }
+
+  document.getElementById("dl").addEventListener("change", function(e){
+    var id = e.target && e.target.getAttribute("data-id");
+    if(!id) return;
+    var i = done.indexOf(id);
+    if(i >= 0) done.splice(i,1); else done.push(id);
+    saveDone(done);
+    render();
+  });
+  document.getElementById("filters").addEventListener("click", function(e){
+    var b = e.target.closest("button"); if(!b) return;
+    filter = b.getAttribute("data-f");
+    [].forEach.call(this.querySelectorAll("button"), function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    render();
+  });
+  document.getElementById("reset").addEventListener("click", function(){
+    done = []; saveDone(done); render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
