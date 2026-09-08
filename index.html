@@ -205,7 +205,7 @@
       <p class="kicker">DLSU · ID 125 · AY 2026–27 · Term 1</p>
     </div>
     <h1>Term 1 Home</h1>
-    <p style="color:var(--ink-soft);max-width:60ch;margin:.2em 0 0">Six subjects, one place. Deadlines update against today's date — tick them off as you go (saved in this browser). Everything links out to Canvas, your NotebookLM notebooks, and the study guides.</p>
+    <p style="color:var(--ink-soft);max-width:62ch;margin:.2em 0 0">Six subjects, one place. Everything on this page recomputes against today's date — the term week, this week's study hours, the next deadline, and which lesson you should be reviewing. Tick deadlines off as you go (saved in this browser); the ones already submitted in Canvas start ticked. Links go out to Canvas, your NotebookLM notebooks, and the study guides.</p>
     <div class="termdates">
       <span>Starts Mon Sep 7</span>
       <span>Independent Learning Oct 29 – Nov 4</span>
@@ -444,7 +444,20 @@
   ];
 
   var KEY = "dlsu-t1-done";
-  function loadDone(){ try{ return JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ return []; } }
+  // already submitted / graded in Canvas as of Sep 9 — shown ticked by default
+  var PRESUBMITTED = [
+    "COBEDEV@2026-09-08T23:59:00+08:00",
+    "COBEDEV@2026-09-11T23:59:00+08:00",
+    "COBEDEV@2026-09-18T23:59:00+08:00",
+    "COBEDEV@2026-10-02T23:59:00+08:00",
+    "COBSTRM@2026-09-11T23:59:00+08:00"
+  ];
+  function loadDone(){
+    var saved; try{ saved = JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ saved = []; }
+    if(!Array.isArray(saved)) saved = [];
+    PRESUBMITTED.forEach(function(id){ if(saved.indexOf(id) < 0) saved.push(id); });
+    return saved;
+  }
   function saveDone(a){ try{ localStorage.setItem(KEY, JSON.stringify(a)); }catch(e){} }
   var done = loadDone();
 
